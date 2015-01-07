@@ -81,7 +81,7 @@ void do_motor(int pin, long *count){
 }
     
 // ticks at last loop exit
-unsigned int last_ticks = 0
+unsigned int last_ticks = 0;
 
 void loop() {
   do_motor(A_PIN, &count_a);
@@ -90,7 +90,47 @@ void loop() {
   do_motor(D_PIN, &count_d);
   
   // do command processing here
-  
+  if (stringComplete) {
+    int motorString = inputString.charAt(0);
+    long motorSteps = inputString.substring(1).toInt();
+    
+    Serial.println(motorString);
+    Serial.println(motorSteps);
+    Serial.println("");
+    
+    switch (motorString) {
+    case 'a':
+    case 'A':
+      count_a += motorSteps;
+      break;
+    case 'b':
+    case 'B':
+      count_b += motorSteps;
+      break;
+    case 'c':
+    case 'C':
+      count_c += motorSteps;
+      break;
+    case 'd':
+    case 'D':
+      count_d += motorSteps;
+    }
+    String output = "";
+    //output += String('A ') + String(count_a) + '\n';
+    //output += String('B ') + String(count_b) + '\n';
+    //output += String('C ') + String(count_c) + '\n';
+    //output += String('D ') + String(count_d) + '\n';
+    //Serial.print(output);
+    Serial.println(count_a);
+    Serial.println(count_b);
+    Serial.println(count_c);
+    Serial.println(count_d);
+
+    inputString= "";
+    stringComplete = false;
+  }
+    
+    
   // delay until at least one tick from last loop completion
   int current_ticks = last_ticks;
   while (current_ticks == last_ticks) {
