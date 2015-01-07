@@ -91,14 +91,10 @@ void loop() {
   
   // do command processing here
   if (stringComplete) {
-    int motorString = inputString.charAt(0);
+    int motorChar = inputString.charAt(0);
     long motorSteps = inputString.substring(1).toInt();
     
-    Serial.println(motorString);
-    Serial.println(motorSteps);
-    Serial.println("");
-    
-    switch (motorString) {
+    switch (motorChar) {
     case 'a':
     case 'A':
       count_a += motorSteps;
@@ -114,8 +110,10 @@ void loop() {
     case 'd':
     case 'D':
       count_d += motorSteps;
+      break;
     }
-    String output = "";
+    String output = String('A ') + String(count_a);
+    Serial.println(output);
     //output += String('A ') + String(count_a) + '\n';
     //output += String('B ') + String(count_b) + '\n';
     //output += String('C ') + String(count_c) + '\n';
