@@ -1,26 +1,36 @@
 #include <TimerOne.h>
 
+// step pulse pin
 #define STEP_PIN 7
+// motor direction pin
+#define DIRECTION_PIN 12
+// motor enable pins
 #define A_PIN 8
 #define B_PIN 9
 #define C_PIN 10
 #define D_PIN 11
-#define DIRECTION_PIN 12
+// motor step pulse width
 #define PULSE_WIDTH_MICROSECONDS 50
+// 1 / maximum update frequency
 #define MINIMUM_PERIOD_MICROSECONDS 2000
+// logic states to enable/disable motors
 #define DISABLE LOW
 #define ENABLE HIGH
+// logic states to motor direction
 #define FORWARD HIGH
 #define BACKWARD LOW
 
-long count_a = 1000;
+// remaining steps for each motor
+long count_a = 0;
 long count_b = 0;
 long count_c = 0;
 long count_d = 0;
 
+// command input buffer
 String inputString = "";
 volatile boolean stringComplete = false;
 
+// tick count
 volatile unsigned int ticks = 0;
 
 void setup () {
