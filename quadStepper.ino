@@ -76,7 +76,7 @@ void do_motor(int pin, long *count){
     // disable motor A
     digitalWrite(pin, DISABLE);
     // increment the count
-    --*count;
+    ++*count;
   }
 }
     
