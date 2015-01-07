@@ -80,20 +80,27 @@ void do_motor(int pin, long *count){
   }
 }
     
+// ticks at last loop exit
+unsigned int last_ticks = 0
+
 void loop() {
-  noInterrupts();
-  int start_ticks = ticks;
-  interrupts();
   do_motor(A_PIN, &count_a);
   do_motor(B_PIN, &count_b);
   do_motor(C_PIN, &count_c);
   do_motor(D_PIN, &count_d);
-  int current_ticks = start_ticks;
-  while (current_ticks == start_ticks) {
+  
+  // do command processing here
+  
+  // delay until at least one tick from last loop completion
+  int current_ticks = last_ticks;
+  while (current_ticks == last_ticks) {
+    // need to temporarily disable interrupts to read a variable
+    // written to by an interrupt function
     noInterrupts();
     current_ticks = ticks;
     interrupts();
   }
+  last_ticks = current_ticks;
 }
 
 void serialEvent() {
