@@ -1,4 +1,44 @@
 #include <TimerOne.h>
+/* 
+  quadStepper: drives four motors using the SparkFun Quadstepper board bus.
+  
+  Copyright (C) January 2015, Mick Phillips.  
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+*/
+
+/* 
+  === Overview ===
+    Each motor is associated with a counter variable. On each iteration
+    of the main loop, if a motor's counter is non-zero, a step pulse
+    is sent and the count inc(dec)remented to bring ot closer to zero.
+    The sign of the counter determines the motor direction.
+    A delay is included to keep the frequency of pulses for each motor
+    below 1 / MINIMUM_PERIOD_MICROSECONDS .
+    The main loop also inspects and acts on a command string received
+    over a serial link.  
+      
+  === Commands ===
+    char(id)long(steps) - e.g. 'A-10', 'B22'
+      Add 'steps' to count for motor 'id'.
+        
+    ?
+      Reports the number of steps remaining for each motor.
+*/
+ 
+  
 
 // step pulse pin
 #define STEP_PIN 7
@@ -91,9 +131,11 @@ void loop() {
   
   // do command processing here
   if (stringComplete) {
+    // parse the string
     int motorChar = inputString.charAt(0);
     long motorSteps = inputString.substring(1).toInt();
     
+    // update specified motor count or report all counts
     switch (motorChar) {
     case 'a':
     case 'A':
@@ -111,18 +153,15 @@ void loop() {
     case 'D':
       count_d += motorSteps;
       break;
+    case '?':
+      // report 
+      String output = "";
+      output += "A " + String(count_a) + "\n";
+      output += "B " + String(count_b) + "\n";
+      output += "C " + String(count_c) + "\n";
+      output += "D " + String(count_d) + "\n";    
+      Serial.println(output);
     }
-    String output = String('A ') + String(count_a);
-    Serial.println(output);
-    //output += String('A ') + String(count_a) + '\n';
-    //output += String('B ') + String(count_b) + '\n';
-    //output += String('C ') + String(count_c) + '\n';
-    //output += String('D ') + String(count_d) + '\n';
-    //Serial.print(output);
-    Serial.println(count_a);
-    Serial.println(count_b);
-    Serial.println(count_c);
-    Serial.println(count_d);
 
     inputString= "";
     stringComplete = false;
