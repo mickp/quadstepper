@@ -160,7 +160,7 @@ void loop() {
       output += "B " + String(count_b) + "\n";
       output += "C " + String(count_c) + "\n";
       output += "D " + String(count_d) + "\n";    
-      Serial.println(output);
+      Serial.print(output);
     }
 
     inputString= "";
